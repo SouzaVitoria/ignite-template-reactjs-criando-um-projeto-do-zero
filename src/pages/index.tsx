@@ -1,4 +1,5 @@
 import { GetStaticProps } from 'next';
+import Prismic from "@prismicio/client"
 
 import { getPrismicClient } from '../services/prismic';
 
@@ -24,13 +25,63 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
-// export default function Home() {
-//   // TODO
-// }
+export default function Home({ postsPagination }: HomeProps) {
+  // console.log("--------", postsPagination.results)
+  // console.log("--------", typeof postsPagination.results)
+  return (
+    <div>
+      {/* {
+        postsPagination.results.map(post => {
+          return (
+            <>
+              <h1>{post.data.title}</h1>
+              <h3>{post.data.subtitle}</h3>
+            </>
+          )
+        })
+      } */}
+    </div>
+  )
+}
 
-// export const getStaticProps = async () => {
-//   // const prismic = getPrismicClient({});
-//   // const postsResponse = await prismic.getByType(TODO);
+export const getStaticProps: GetStaticProps = async () => {
+  const prismic = getPrismicClient()
+  const response = await prismic.query<any>([
+    Prismic.predicates.at("document.type", "post")
+  ], {
+    fetch: ["post.title", "post.subtitle"],
+    pageSize: 10
+  })
+  console.log(response)
 
-//   // TODO
-// };
+  // const posts: Post[] = postsResponse.results.map((post: Post) => {
+  //   const { uid, first_publication_date } = post
+  //   const { title, subtitle, author } = post.data
+  //   const createdAt = new Date(first_publication_date).toLocaleDateString("pt-BR", {
+  //     day: "2-digit",
+  //     month: "short",
+  //     year: "numeric"
+  //   })
+
+  //   return {
+  //     uid,
+  //     first_publication_date: createdAt,
+  //     data: {
+  //       title,
+  //       subtitle,
+  //       author
+  //     }
+  //   }
+  // })
+
+  // const postsPagination: PostPagination = {
+  //   next_page: postsResponse.next_page,
+  //   results: posts,
+  // }
+
+  return {
+    props: {
+
+    }
+  }
+};
