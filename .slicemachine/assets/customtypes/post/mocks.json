@@ -1,0 +1,61 @@
+{
+  "id": "742edb60-31cf-41f6-adf7-6ecda4e17a03",
+  "uid": "facilis-ut-dolorem",
+  "type": "post",
+  "data": {
+    "title": "incubate interactive content",
+    "subtitle": "unleash compelling bandwidth",
+    "author": "architect cross-platform communities",
+    "banner": {
+      "dimensions": {
+        "width": 900,
+        "height": 500
+      },
+      "alt": "Placeholder image",
+      "copyright": null,
+      "url": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=900&h=500&fit=crop"
+    },
+    "content": [
+      {
+        "heading": "unleash leading-edge portals",
+        "body": [
+          {
+            "type": "paragraph",
+            "text": "Laborum sit occaecat consequat anim mollit sint. Ullamco commodo eu enim occaecat exercitation anim.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "heading": "integrate holistic markets",
+        "body": [
+          {
+            "type": "paragraph",
+            "text": "Dolore do cupidatat occaecat nisi veniam commodo. Tempor do occaecat tempor culpa. Enim est cillum irure aliqua qui.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "heading": "aggregate extensible networks",
+        "body": [
+          {
+            "type": "paragraph",
+            "text": "Magna occaecat veniam veniam nostrud adipisicing ipsum est magna qui nulla ad minim minim.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "heading": "aggregate holistic initiatives",
+        "body": [
+          {
+            "type": "paragraph",
+            "text": "Duis esse proident laboris exercitation aliquip aute. Fugiat nisi nulla et incididunt sint irure nostrud irure qui commodo exercitation occaecat aliqua ea minim.",
+            "spans": []
+          }
+        ]
+      }
+    ]
+  }
+}
