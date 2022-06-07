@@ -1,1 +1,54 @@
-// TODO
+.container {
+  .postsContainer {
+    margin-top: 10.625rem;
+
+    .content {
+      max-width: 700px;
+      margin: 3rem auto 0;
+
+      .title {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 1.75rem;
+        line-height: 2.1rem;
+        text-align: justify;
+        color: var(--white);
+        margin-bottom: 0.5rem;
+      }
+
+      .subtitle {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 1.125rem;
+        line-height: 1.3rem;
+        text-align: justify;
+        color: var(--body-color);
+      }
+
+      .dateAndAuthor {
+        margin-top: 1.5rem;
+        display: flex;
+
+        span {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-style: normal;
+          font-weight: 400;
+          font-size: 0.875rem;
+          line-height: 1.0625rem;
+          color: var(--info-color);
+
+          &.date {
+            margin-right: 1.5rem;
+          }
+
+          svg {
+            margin-right: 0.5rem;
+            color: var(--info-color);
+          }
+        }
+      }
+    }
+  }
+}
