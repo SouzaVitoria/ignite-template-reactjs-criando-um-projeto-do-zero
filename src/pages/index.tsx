@@ -49,6 +49,13 @@ export default function Home({ postsPagination }: HomeProps) {
           })
         }
       </div>
+      {
+        postsPagination.next_page &&
+        <div className={styles.showmore}>
+          <button className={styles.postsShowmore}>Carregar mais posts</button>
+        </div>
+      }
+
     </div>
   )
 }
@@ -78,7 +85,8 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   })
 
-  const postsPagination = {
+  const postsPagination: PostPagination = {
+    next_page: postsResponse.next_page,
     results: posts,
   }
 
