@@ -4,6 +4,7 @@ import { FiCalendar, FiUser } from "react-icons/fi"
 
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
+import { useState } from 'react';
 
 interface Post {
   uid?: string;
@@ -24,12 +25,31 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
+interface ResponseData {
+  next_page: string
+  results: Post[]
+}
+
 export default function Home({ postsPagination }: HomeProps) {
+  const [posts, setPosts] = useState<Post[]>(postsPagination.results)
+  const [hasNextPage, setHasNextPage] = useState<string>(postsPagination.next_page)
+
+  const nextPage = async () => {
+    if (hasNextPage) {
+      const response = await fetch(postsPagination.next_page)
+      const data: ResponseData = await response.json()
+      setHasNextPage(data.next_page)
+      data.results.map(post => {
+        return setPosts([...posts, post])
+      })
+    }
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.postsContainer}>
         {
-          postsPagination.results.map(post => {
+          posts.map(post => {
             return (
               <div key={post.uid} className={styles.content}>
                 <h1 className={styles.title}>{post.data.title}</h1>
@@ -50,9 +70,9 @@ export default function Home({ postsPagination }: HomeProps) {
         }
       </div>
       {
-        postsPagination.next_page &&
+        hasNextPage &&
         <div className={styles.showmore}>
-          <button className={styles.postsShowmore}>Carregar mais posts</button>
+          <button className={styles.postsShowmore} onClick={nextPage}>Carregar mais posts</button>
         </div>
       }
 
@@ -63,10 +83,10 @@ export default function Home({ postsPagination }: HomeProps) {
 export const getStaticProps: GetStaticProps = async () => {
   const prismic = getPrismicClient({})
   const postsResponse = await prismic.getByType('post', {
-    pageSize: 1,
+    pageSize: 3,
   });
 
-  const posts: Post[] = postsResponse.results.map((post: Post) => {
+  const posts: Post[] = postsResponse.results.map(post => {
     const { uid, first_publication_date, data: { title, subtitle, author } } = post
     const createdAt = new Date(first_publication_date).toLocaleDateString("pt-BR", {
       day: "2-digit",
