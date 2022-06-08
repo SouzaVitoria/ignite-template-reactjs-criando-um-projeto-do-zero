@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import { GetStaticProps } from 'next';
 import { getPrismicClient } from '../services/prismic';
 import { FiCalendar, FiUser } from "react-icons/fi"
+import Link from "next/link"
 
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
-import { useState } from 'react';
 
 interface Post {
   uid?: string;
@@ -52,18 +53,22 @@ export default function Home({ postsPagination }: HomeProps) {
           posts.map(post => {
             return (
               <div key={post.uid} className={styles.content}>
-                <h1 className={styles.title}>{post.data.title}</h1>
-                <h3 className={styles.subtitle}>{post.data.subtitle}</h3>
-                <div className={styles.dateAndAuthor}>
-                  <span className={styles.date}>
-                    <FiCalendar size={20} />
-                    {post.first_publication_date}
-                  </span>
-                  <span className={styles.author}>
-                    <FiUser size={20} />
-                    {post.data.author}
-                  </span>
-                </div>
+                <Link href={`/post/${post.uid}`}>
+                  <a>
+                    <h1 className={styles.title}>{post.data.title}</h1>
+                    <h3 className={styles.subtitle}>{post.data.subtitle}</h3>
+                    <div className={styles.dateAndAuthor}>
+                      <span className={styles.date}>
+                        <FiCalendar size={20} />
+                        {post.first_publication_date}
+                      </span>
+                      <span className={styles.author}>
+                        <FiUser size={20} />
+                        {post.data.author}
+                      </span>
+                    </div>
+                  </a>
+                </Link>
               </div>
             )
           })
