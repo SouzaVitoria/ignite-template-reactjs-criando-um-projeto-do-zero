@@ -1,6 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { RichText } from 'prismic-dom';
-import { FiCalendar, FiUser } from 'react-icons/fi';
+import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
 
 import { getPrismicClient } from '../../services/prismic';
 
@@ -26,10 +26,13 @@ interface Post {
 
 interface PostProps {
   post: Post;
+  totalCharacterBody: number;
 }
 
-export default function Post({ post }: PostProps) {
+export default function Post({ post, totalCharacterBody }: PostProps) {
   const { first_publication_date, data: { title, banner: { url }, author, content } } = post
+  const characterPorMinuts = 200;
+  const readingTime = Math.round(totalCharacterBody / characterPorMinuts)
 
   return (
     <div className={styles.container}>
@@ -44,6 +47,10 @@ export default function Post({ post }: PostProps) {
           <span className={commonStyles.author}>
             <FiUser size={20} />
             {author}
+          </span>
+          <span>
+            <FiClock size={20} />
+            {readingTime} min
           </span>
         </div>
         <main className={styles.content}>
@@ -100,9 +107,16 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }
   }
 
+  const totalCharacterBody = content.reduce((total: number, current) => {
+    const characterHeadingTotal = current.heading.split(' ').length
+    const totalBody = RichText.asText(current.body).split(' ').length;
+    return (total += characterHeadingTotal + totalBody);
+  }, 0);
+
   return {
     props: {
-      post
+      post,
+      totalCharacterBody
     }
   }
 };
