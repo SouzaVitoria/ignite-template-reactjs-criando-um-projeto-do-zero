@@ -1,10 +1,13 @@
-.container {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 2.5rem 0;
+.header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   background-color: var(--background);
+}
+
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2.5rem 0;
 }
