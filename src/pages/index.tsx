@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { GetStaticProps } from 'next';
+import ptBR from 'date-fns/locale/pt-BR';
+import { format } from 'date-fns';
 import { getPrismicClient } from '../services/prismic';
 import { FiCalendar, FiUser } from "react-icons/fi"
 import Link from "next/link"
@@ -46,6 +48,10 @@ export default function Home({ postsPagination }: HomeProps) {
     }
   }
 
+  function formattedDate(date: string): string {
+    return format(new Date(date), 'dd MMM yyyy', { locale: ptBR });
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.postsContainer}>
@@ -60,7 +66,7 @@ export default function Home({ postsPagination }: HomeProps) {
                     <div className={commonStyles.dateAndAuthor}>
                       <span className={commonStyles.date}>
                         <FiCalendar size={20} />
-                        {post.first_publication_date}
+                        {formattedDate(post.first_publication_date)}
                       </span>
                       <span className={commonStyles.author}>
                         <FiUser size={20} />
@@ -93,15 +99,10 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const posts: Post[] = postsResponse.results.map(post => {
     const { uid, first_publication_date, data: { title, subtitle, author } } = post
-    const createdAt = new Date(first_publication_date).toLocaleDateString("pt-BR", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric"
-    })
 
     return {
       uid,
-      first_publication_date: createdAt,
+      first_publication_date,
       data: {
         title,
         subtitle,
