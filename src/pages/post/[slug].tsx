@@ -76,7 +76,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prismic = getPrismicClient({});
   const response = await prismic.getByUID("post", params.slug);
   const { first_publication_date, data: { author, title, banner: { url }, content } } = response
-
+  const date = new Date(first_publication_date).toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  })
   const contents = content.map(current => {
     return {
       heading: current.heading,
@@ -85,7 +89,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   })
 
   const post: Post = {
-    first_publication_date,
+    first_publication_date: date,
     data: {
       author,
       title,
