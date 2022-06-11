@@ -29,10 +29,13 @@ main.content {
     }
   }
 
-  p {
-    line-height: 1.425rem;
-    & ~ p {
-      margin-top: 1rem;
+  div {
+    p {
+      line-height: 1.425rem;
+    }
+
+    & ~ div {
+      margin-top: 3rem;
     }
   }
 

@@ -32,8 +32,8 @@
     line-height: 1.0625rem;
     color: var(--info-color);
 
-    &.date {
-      margin-right: 1.5rem;
+    & ~ span {
+      margin-left: 1.5rem;
     }
 
     svg {

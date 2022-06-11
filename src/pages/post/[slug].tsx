@@ -56,10 +56,10 @@ export default function Post({ post, totalCharacterBody }: PostProps) {
         <main className={styles.content}>
           {content.map(current => {
             return (
-              <>
+              <div key={current.heading}>
                 <h2 className={styles.subtitles}> {current.heading} </h2>
                 <div dangerouslySetInnerHTML={{ __html: current.body }} />
-              </>
+              </div>
             )
           })}
         </main>
