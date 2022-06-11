@@ -1,11 +1,14 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { RichText } from 'prismic-dom';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
 
 import { getPrismicClient } from '../../services/prismic';
 
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
+import { useRouter } from 'next/router';
 
 interface Post {
   first_publication_date: string | null;
@@ -26,13 +29,29 @@ interface Post {
 
 interface PostProps {
   post: Post;
-  totalCharacterBody: number;
 }
 
-export default function Post({ post, totalCharacterBody }: PostProps) {
+export default function Post({ post }: PostProps) {
+  const route = useRouter();
   const { first_publication_date, data: { title, banner: { url }, author, content } } = post
   const characterPorMinuts = 200;
+
+  const totalCharacterBody = content.reduce((total: number, current) => {
+    const characterHeadingTotal = current.heading.split(' ').length
+    const totalBody = RichText.asText(current.body).split(' ').length;
+    return (total += characterHeadingTotal + totalBody);
+  }, 0);
+
   const readingTime = Math.round(totalCharacterBody / characterPorMinuts)
+
+
+  function formattedDate(date: string): string {
+    return format(new Date(date), 'dd MMM yyyy', { locale: ptBR });
+  }
+
+  if (route.isFallback) {
+    return <p>Carregando...</p>;
+  }
 
   return (
     <div className={styles.container}>
@@ -42,7 +61,7 @@ export default function Post({ post, totalCharacterBody }: PostProps) {
         <div className={commonStyles.info}>
           <span className={commonStyles.date}>
             <FiCalendar size={20} />
-            {first_publication_date}
+            {formattedDate(first_publication_date)}
           </span>
           <span className={commonStyles.author}>
             <FiUser size={20} />
@@ -58,7 +77,7 @@ export default function Post({ post, totalCharacterBody }: PostProps) {
             return (
               <div key={current.heading}>
                 <h2 className={styles.subtitles}> {current.heading} </h2>
-                <div dangerouslySetInnerHTML={{ __html: current.body }} />
+                <div dangerouslySetInnerHTML={{ __html: RichText.asHtml(current.body) }} />
               </div>
             )
           })}
@@ -73,9 +92,15 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const prismic = getPrismicClient({});
   const posts = await prismic.getByType("post");
 
+  const paths = posts.results.map(post => {
+    return {
+      params: { slug: post.uid }
+    }
+  })
+
   return {
-    paths: [],
-    fallback: "blocking"
+    paths,
+    fallback: true
   }
 };
 
@@ -83,20 +108,16 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prismic = getPrismicClient({});
   const response = await prismic.getByUID("post", params.slug);
   const { first_publication_date, data: { author, title, banner: { url }, content } } = response
-  const date = new Date(first_publication_date).toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric"
-  })
-  const contents = content.map(current => {
+
+  const contents = await content.map(current => {
     return {
       heading: current.heading,
-      body: RichText.asHtml(current.body)
+      body: current.body
     }
   })
 
   const post: Post = {
-    first_publication_date: date,
+    first_publication_date,
     data: {
       author,
       title,
@@ -107,16 +128,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }
   }
 
-  const totalCharacterBody = content.reduce((total: number, current) => {
-    const characterHeadingTotal = current.heading.split(' ').length
-    const totalBody = RichText.asText(current.body).split(' ').length;
-    return (total += characterHeadingTotal + totalBody);
-  }, 0);
-
   return {
     props: {
-      post,
-      totalCharacterBody
-    }
+      post
+    },
+    revalidate: 60 * 60 * 24, // 24 horas
   }
 };
