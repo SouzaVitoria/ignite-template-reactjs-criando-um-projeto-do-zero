@@ -17,7 +17,8 @@
   color: var(--body-color);
 }
 
-.dateAndAuthor {
+.dateAndAuthor,
+.info {
   margin-top: 1.5rem;
   display: flex;
 
@@ -40,4 +41,9 @@
       color: var(--info-color);
     }
   }
+}
+
+.content {
+  max-width: 700px;
+  margin: 3rem auto 0;
 }
