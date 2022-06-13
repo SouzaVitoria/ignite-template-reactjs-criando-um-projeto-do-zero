@@ -12,8 +12,10 @@ import { useRouter } from 'next/router';
 
 interface Post {
   first_publication_date: string | null;
+  uid: string
   data: {
     title: string;
+    subtitle: string
     banner: {
       url: string;
     };
@@ -42,7 +44,7 @@ export default function Post({ post }: PostProps) {
     return (total += characterHeadingTotal + totalBody);
   }, 0);
 
-  const readingTime = Math.round(totalCharacterBody / characterPorMinuts)
+  const readingTime = Math.ceil(totalCharacterBody / characterPorMinuts)
 
 
   function formattedDate(date: string): string {
@@ -106,8 +108,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prismic = getPrismicClient({});
-  const response = await prismic.getByUID("post", params.slug);
-  const { first_publication_date, data: { author, title, banner: { url }, content } } = response
+  const response = await prismic.getByUID("post", String(params.slug));
+  const { first_publication_date, uid, data: { author, title, subtitle, banner: { url }, content } } = response
 
   const contents = await content.map(current => {
     return {
@@ -118,9 +120,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const post: Post = {
     first_publication_date,
+    uid,
     data: {
       author,
       title,
+      subtitle,
       banner: {
         url
       },
